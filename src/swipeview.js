@@ -2,7 +2,8 @@
  * SwipeView v1.0 ~ Copyright (c) 2012 Matteo Spinelli, http://cubiq.org
  * Released under MIT license, http://cubiq.org/license
  */
-var SwipeView = (function (window, document) {
+;(function (window, document) {
+
 	var dummyStyle = document.createElement('div').style,
 		vendor = (function () {
 			var vendors = 't,webkitT,MozT,msT,OT'.split(','),
@@ -143,6 +144,21 @@ var SwipeView = (function (window, document) {
 			this.customEvents.push(['touchstart', fn]);
 		},
 
+		onEndEvent: function(fn) {
+			this.wrapper.addEventListener('swipeview-endEvent', fn, false);
+			this.customEvents.push(['endEvent', fn]);
+		},
+
+		onTransitionEndEvent: function(fn){
+			this.wrapper.addEventListener('swipeview-transitionEndEvent', fn, false);
+			this.customEvents.push(['transitionEndEvent', fn]);
+		},
+
+		onMouseMoveEvent: function(fn){
+			this.wrapper.addEventListener('swipeview-mouseMoveEvent', fn, false);
+			this.customEvents.push(['mouseMoveEvent', fn]);
+		},
+
 		destroy: function () {
 			while ( this.customEvents.length ) {
 				this.wrapper.removeEventListener('swipeview-' + this.customEvents[0][0], this.customEvents[0][1], false);
@@ -259,7 +275,10 @@ var SwipeView = (function (window, document) {
 					break;
 				case transitionEndEvent:
 				case 'otransitionend':
-					if (e.target == this.slider && !this.options.hastyPageFlip) this.__flip();
+					if (e.target == this.slider && !this.options.hastyPageFlip) 
+						this.__flip();
+					this.moved = false;
+					this.__event('transitionEndEvent');
 					break;
 			}
 		},
@@ -382,6 +401,7 @@ var SwipeView = (function (window, document) {
 			}
 
 			this.__checkPosition();
+			this.__event('endEvent');
 		},
 		
 		__checkPosition: function () {
@@ -467,5 +487,22 @@ var SwipeView = (function (window, document) {
 		return vendor + style;
 	}
 
-	return SwipeView;
+
+
+	// AMD / RequireJS
+	if (typeof define !== 'undefined' && define.amd) {
+	    define([], function () {
+	        return SwipeView;
+	    });
+	}
+	// Node.js
+	else if (typeof module !== 'undefined' && module.exports) {
+	    module.exports = SwipeView;
+	}
+	// included directly via <script> tag
+	else {
+	    window.SwipeView = SwipeView;
+	}
+
+
 })(window, document);
