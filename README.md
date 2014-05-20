@@ -1,4 +1,4 @@
-SwipeView v1.1
+SwipeView v1.2
 ============================
 
 Virtually infinite loop-able horizontal carousel for desktop and mobile browsers.

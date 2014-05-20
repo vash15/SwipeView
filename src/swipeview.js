@@ -1,5 +1,5 @@
 /*!
- * SwipeView v1.1 ~ Copyright (c) 2012 Matteo Spinelli, http://cubiq.org
+ * SwipeView v1.2 ~ Copyright (c) 2012 Matteo Spinelli, http://cubiq.org
  * Released under MIT license, http://cubiq.org/license
  */
 ;(function (window, document) {
@@ -265,6 +265,7 @@
 					break;
 				case moveEvent:
 					this.__move(e);
+					this.__event('mouseMoveEvent');
 					break;
 				case cancelEvent:
 				case endEvent:
@@ -273,7 +274,13 @@
 				case resizeEvent:
 					this.__resize();
 					break;
-				case transitionEndEvent:
+				
+				//case transitionEndEvent:
+				case 'transitionend':
+				case 'webkitTransitionEnd':
+				case 'transitionend':
+				case 'oTransitionEnd':
+				case 'MSTransitionEnd':
 				case 'otransitionend':
 					if (e.target == this.slider && !this.options.hastyPageFlip) 
 						this.__flip();
