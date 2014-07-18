@@ -123,6 +123,16 @@
 		page: 0,
 		pageIndex: 0,
 		customEvents: [],
+
+		onMoveStart: function (fn){
+			this.wrapper.addEventListener('swipeview-moveStart', fn, false);
+			this.customEvents.push(['moveStart', fn]);
+		},
+
+		onMove: function (fn) {
+			this.wrapper.addEventListener('swipeview-move', fn, false);
+			this.customEvents.push(['move', fn]);
+		},
 		
 		onFlip: function (fn) {
 			this.wrapper.addEventListener('swipeview-flip', fn, false);
@@ -312,6 +322,8 @@
 
 			if (this.initiated) return;
 			
+			this.__event('moveStart');
+			
 			var point = hasTouch ? e.touches[0] : e;
 			
 			this.initiated = true;
@@ -362,6 +374,8 @@
 				return;
 			}
 
+			this.__event('move');
+
 			e.preventDefault();
 
 			this.directionLocked = true;
@@ -383,6 +397,7 @@
 			}*/
 			
 			this.__pos(newX);
+
 		},
 		
 		__end: function (e) {
