@@ -1,0 +1,27 @@
+{
+  "name": "SwipeView",
+  "version": "1.2.2",
+  "authors": [
+    "Matteo Spinelli"
+  ],
+  "description": "Virtually infinite loop-able horizontal carousel for desktop and mobile browsers.",
+  "main": "src/swipeview.js",
+  "moduleType": [
+    "amd",
+    "globals",
+    "node"
+  ],
+  "keywords": [
+    "swipeview"
+  ],
+  "license": "https://raw.githubusercontent.com/vash15/SwipeView/master/license.txt",
+  "homepage": "http://cubiq.org/",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
