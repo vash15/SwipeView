@@ -72,7 +72,7 @@
 		
 			// User defined options
 			for (i in options) this.options[i] = options[i];
-			
+
 			this.wrapper.style.overflow = 'hidden';
 			this.wrapper.style.position = 'relative';
 			
@@ -111,6 +111,7 @@
 			this.slider.addEventListener(transitionEndEvent, this, false);
 			// in Opera >= 12 the transitionend event is lowercase so we register both events
 			if ( vendor == 'O' ) this.slider.addEventListener(transitionEndEvent.toLowerCase(), this, false);
+
 
 /*			if (!hasTouch) {
 				this.wrapper.addEventListener('mouseout', this, false);
@@ -267,6 +268,11 @@
 			this.x += 1;
 			this.__checkPosition();
 		},
+		
+		disableSwipe: function(direction){
+			this._disableScrollTo = direction
+			return this;
+		},
 
 		handleEvent: function (e) {
 			switch (e.type) {
@@ -274,12 +280,42 @@
 					this.__start(e);
 					break;
 				case moveEvent:
-					this.__move(e);
-					this.__event('mouseMoveEvent');
+					var go = true;
+					
+					// Se ho disabilitato lo swipe controllo la direzione 
+					if ( this._disableScrollTo ){
+						if ( this._disableScrollTo == "dx" && this.directionX == -1 ){
+							go = false;
+						}else if ( this._disableScrollTo == "sx" && this.directionX == 1 ){
+							go = false;
+						}
+					}
+					
+					// Se ho il via libera vado avanti con l'evento
+					if ( go ){
+						this.__move(e);
+						this.__event('mouseMoveEvent');	
+					}else{
+						// Altrimenti blocco tutto e non inizializzo l'evento
+						this.initiated = false;
+					}
+					
 					break;
 				case cancelEvent:
 				case endEvent:
-					this.__end(e);
+					var go = true;
+
+					if ( this._disableScrollTo ){
+						if ( this._disableScrollTo == "dx" && this.directionX == -1 ){
+							go = false;
+						}else if ( this._disableScrollTo == "sx" && this.directionX == 1 ){
+							go = false;
+						}
+					}
+
+					if ( go )
+						this.__end(e);
+
 					break;
 				case resizeEvent:
 					this.__resize();
@@ -318,6 +354,7 @@
 		},
 
 		__start: function (e) {
+
 			//e.preventDefault();
 
 			if (this.initiated) return;
